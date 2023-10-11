@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable("userId") Long userId) {
-        userServiceImpl.deleteUser(userId);
+    public void deleteUserById(@PathVariable("userId") Long userId) {
+        userServiceImpl.deleteUserById(userId);
     }
 }
