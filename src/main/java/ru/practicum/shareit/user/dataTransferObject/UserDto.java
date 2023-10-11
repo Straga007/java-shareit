@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(of = "email")
