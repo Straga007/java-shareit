@@ -7,6 +7,9 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.dataTransferObject.UserDto;
 import ru.practicum.shareit.user.service.UserServiceImpl;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +26,7 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
-    public ItemDto addItem(Long userId, ItemDto itemDto) {
+    public ItemDto addItem(@Positive Long userId, @Valid ItemDto itemDto) {
         itemDto.setOwnerId(userServiceImpl.findUserById(userId).getId());
         id++;
         itemDto.setId(id);
@@ -32,7 +35,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getItemsByUser(Long userId) {
+    public List<ItemDto> getItemsByUser(@Positive Long userId) {
         UserDto user = userServiceImpl.findUserById(userId);
         return items.values().stream()
                 .filter(item -> item.getOwnerId().equals(user.getId()))
@@ -40,7 +43,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto findItemById(Long userId, Long itemId) {
+    public ItemDto findItemById(@Positive Long userId, @Positive Long itemId) {
         userServiceImpl.findUserById(userId);
         if (!items.containsKey(itemId)) {
             throw new NotFoundException("Item not found.");
@@ -49,7 +52,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto updateItem(Long userId, Long itemId, ItemDto itemDto) {
+    public ItemDto updateItem(@Positive Long userId, @Positive Long itemId, @Valid ItemDto itemDto) {
         userServiceImpl.findUserById(userId);
         String name = itemDto.getName();
         String description = itemDto.getDescription();
@@ -65,7 +68,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> searchItems(Long userId, String text) {
+    public List<ItemDto> searchItems(@Positive Long userId, @NotBlank String text) {
         userServiceImpl.findUserById(userId);
         if (text == null || text.isBlank()) {
             return new ArrayList<>();
