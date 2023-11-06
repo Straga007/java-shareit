@@ -2,6 +2,8 @@ package ru.practicum.shareit.item.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.DtoTime;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
 
@@ -21,12 +23,12 @@ public class ItemController {
 
 
     @GetMapping
-    public List<ItemDto> getItemsByUser(@RequestHeader(header) Long userId) {
+    public List<DtoTime> getItemsByUser(@RequestHeader(header) Long userId) {
         return itemServiceImpl.getItemsByUser(userId);
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto findItemById(@RequestHeader(header) Long userId,
+    public DtoTime findItemById(@RequestHeader(header) Long userId,
                                 @PathVariable("itemId") Long itemId) {
         return itemServiceImpl.findItemById(userId, itemId);
     }
@@ -48,5 +50,17 @@ public class ItemController {
                               @PathVariable("itemId") Long itemId,
                               @RequestBody ItemDto itemDto) {
         return itemServiceImpl.updateItem(userId, itemId, itemDto);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@RequestHeader(header) Long userId,
+                                 @PathVariable("itemId") Long itemId,
+                                 @Valid @RequestBody CommentDto commentDto) {
+        return itemServiceImpl.addComment(userId, itemId, commentDto);
+    }
+
+    @GetMapping("/comments")
+    public List<CommentDto> getAllComments() {
+        return itemServiceImpl.getAllComments();
     }
 }

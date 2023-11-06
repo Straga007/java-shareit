@@ -1,77 +1,75 @@
 package ru.practicum.shareit.user.service;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exeptions.NotFoundException;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exeptions.NotFoundUserException;
+import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.dataTransferObject.UserDto;
+import ru.practicum.shareit.user.mapper.UserMapper;
+import ru.practicum.shareit.user.object.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.validation.Valid;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserServiceImpl implements UserService {
-    private Long id = 0L;
-    public final Map<Long, UserDto> users = new HashMap<>();
 
+    UserRepository userRepository;
 
     @Override
     public List<UserDto> getUsers() {
-        return new ArrayList<>(users.values());
+        return userRepository.findAll().stream()
+                .map(UserMapper::toUserDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public UserDto addUser(UserDto userDto) {
-        if (users.containsValue(userDto)) {
-            throw new IllegalArgumentException(String.format("User with email %s already exists", userDto.getEmail()));
+    public UserDto addUser(@Valid UserDto userDto) {
+        User user = UserMapper.toUser(userDto);
+        try {
+            user = userRepository.save(user);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException("User with this email already exists");
         }
-        id++;
-        userDto.setId(id);
-        UserDto userNew = new UserDto(userDto.getId(), userDto.getName(), userDto.getEmail());
-        users.put(id, userNew);
-        return userNew;
+        return UserMapper.toUserDto(user);
     }
 
     @Override
     public UserDto updateUser(Long userId, UserDto userDto) {
-        UserDto updatedUser = findUserById(userId);
-
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundUserException("User not found"));
         String name = userDto.getName();
         String email = userDto.getEmail();
-
-        if (name != null && !name.isBlank()) {
-            updatedUser.setName(name);
-        }
-
+        user.setName(name != null && !name.isBlank() ? name : user.getName());
         if (email != null && !email.isBlank()) {
-            if (emailExistsForOtherUser(userId, email)) {
+            Optional<User> existingUser = userRepository.findByEmail(email);
+            if (existingUser.isPresent() && !existingUser.get().getId().equals(userId)) {
                 throw new IllegalArgumentException(String.format("User with email %s already exists", email));
             }
-            updatedUser.setEmail(email);
+            user.setEmail(email);
         }
-
-        return updatedUser;
+        user = userRepository.save(user);
+        return UserMapper.toUserDto(user);
     }
-
-    private boolean emailExistsForOtherUser(Long userId, String email) {
-        return users.values().stream()
-                .anyMatch(user -> !user.getId().equals(userId) && email.equals(user.getEmail()));
-    }
-
 
     @Override
     public UserDto findUserById(Long userId) {
-        if (!users.containsKey(userId)) {
-            throw new NotFoundException("User not found.");
-        }
-        return users.get(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundUserException("User not found"));
+        return UserMapper.toUserDto(user);
     }
+
 
     @Override
     public void deleteUserById(Long userId) {
-        if (!users.containsKey(userId)) {
-            throw new NotFoundException("User not found.");
-        }
-        users.remove(userId);
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundUserException("User not found"));
+        userRepository.deleteById(userId);
     }
 }
+
