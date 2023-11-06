@@ -1,4 +1,4 @@
-package ru.practicum.shareit.booking;
+package ru.practicum.shareit.booking.service;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -9,8 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
+import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
+import ru.practicum.shareit.booking.repositry.BookingRepository;
 import ru.practicum.shareit.exeptions.NotFoundBookingException;
 import ru.practicum.shareit.exeptions.NotFoundItemException;
 import ru.practicum.shareit.exeptions.UnsupportedStateException;
