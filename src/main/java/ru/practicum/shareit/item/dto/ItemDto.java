@@ -32,6 +32,7 @@ public class ItemDto {
     Long requestId;
 
     List<CommentDto> comments;
+
     public boolean isAvailable() {
         return available;
     }
