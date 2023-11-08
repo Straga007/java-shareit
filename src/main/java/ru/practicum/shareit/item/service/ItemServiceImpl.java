@@ -3,6 +3,8 @@ package ru.practicum.shareit.item.service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +45,7 @@ public class ItemServiceImpl implements ItemService {
     BookingRepository bookingRepository;
 
     ItemRepository itemRepository;
+    private static final Logger logger = LoggerFactory.getLogger(ItemServiceImpl.class);
 
     CommentRepository commentRepository;
 
@@ -55,12 +58,18 @@ public class ItemServiceImpl implements ItemService {
                 .collect(Collectors.toList());
     }
 
+
     @Override
     public ItemDto addItem(Long userId, ItemDto itemDto) {
-        User owner = UserMapper.toUser(userService.findUserById(userId));
-        itemDto.setOwner(UserMapper.toUserDto(owner));
-        Item item = itemRepository.save(ItemMapper.toItem(itemDto));
-        return ItemMapper.toItemDto(item);
+        try {
+            User owner = UserMapper.toUser(userService.findUserById(userId));
+            itemDto.setOwner(UserMapper.toUserDto(owner));
+            Item item = itemRepository.save(ItemMapper.toItem(itemDto));
+            return ItemMapper.toItemDto(item);
+        } catch (Exception e) {
+            logger.error("An error occurred while adding an item.", e);
+            throw e;
+        }
     }
 
     @Override

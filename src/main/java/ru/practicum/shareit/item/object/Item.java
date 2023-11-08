@@ -36,9 +36,10 @@ public class Item {
     @NotBlank(message = "Item cant be blank")
     @Size(min = 1, max = 50, message = "description must be between 1 and 50 characters")
     String description;
-    @Column(nullable = false)
+    @Column(name = "is_available", nullable = false)
     @NotNull(message = "Item cant be null")
     Boolean available;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
