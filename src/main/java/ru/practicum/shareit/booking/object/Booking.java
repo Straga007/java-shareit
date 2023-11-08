@@ -1,11 +1,11 @@
-package ru.practicum.shareit.booking.model;
+package ru.practicum.shareit.booking.object;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.object.Item;
 import ru.practicum.shareit.user.object.User;
 
 import javax.persistence.*;
