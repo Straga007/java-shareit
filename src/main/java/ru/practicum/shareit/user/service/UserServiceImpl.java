@@ -12,7 +12,6 @@ import ru.practicum.shareit.user.dataTransferObject.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.object.User;
 
-import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,7 +24,7 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<UserDto> getUsers() {
         return userRepository.findAll().stream()
                 .map(UserMapper::toUserDto)
@@ -61,7 +60,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public UserDto findUserById(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
         return UserMapper.toUserDto(user);
