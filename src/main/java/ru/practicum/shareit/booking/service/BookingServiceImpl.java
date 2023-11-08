@@ -24,6 +24,7 @@ import ru.practicum.shareit.user.service.UserService;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,6 +38,7 @@ public class BookingServiceImpl implements BookingService {
     ItemService itemService;
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookingDto> getAllBookingsWithState(Long userId, String state) {
         userService.findUserById(userId);
         LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
@@ -75,6 +77,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookingDto> getBookingByOwner(Long userId, String state) {
         userService.findUserById(userId);
         LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
@@ -113,10 +116,31 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookingDto> getBookingByOwnerId(Long ownerId) {
         return bookingRepository.findAllByItemOwnerIdOrderByStartAsc(ownerId).stream()
                 .map(BookingMapper::toBookingDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Booking> findBookingByItemIdOrderByStartAsc(Long itemId) {
+        return bookingRepository.findBookingByItemIdOrderByStartAsc(itemId);
+    }
+
+    @Override
+    public Optional<Booking> findTopByItemOwnerIdAndStatusAndStartBeforeOrderByEndDesc(Long ownerId, Status status, LocalDateTime start) {
+        return bookingRepository.findTopByItemOwnerIdAndStatusAndStartBeforeOrderByEndDesc(ownerId, status, start);
+    }
+
+    @Override
+    public Optional<Booking> findTopByItemOwnerIdAndStatusAndStartAfterOrderByStartAsc(Long ownerId, Status status, LocalDateTime start) {
+        return bookingRepository.findTopByItemOwnerIdAndStatusAndStartAfterOrderByStartAsc(ownerId, status, start);
+    }
+
+    @Override
+    public List<Booking> findBookingByItemIdAndBookerIdAndStatusAndEndBefore(Long itemId, Long userId, Status status, LocalDateTime end) {
+        return bookingRepository.findBookingByItemIdAndBookerIdAndStatusAndEndBefore(itemId, userId, status, end);
     }
 
     @Override
@@ -149,6 +173,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BookingDto findBookingById(Long userId, Long bookingId) {
         userService.findUserById(userId);
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundException("Booking not found."));

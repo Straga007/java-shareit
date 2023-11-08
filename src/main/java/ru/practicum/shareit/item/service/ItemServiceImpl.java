@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
-import ru.practicum.shareit.booking.repositry.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
+import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.exeptions.NotFoundException;
 import ru.practicum.shareit.item.CommentRepository;
 import ru.practicum.shareit.item.ItemRepository;
@@ -39,14 +39,12 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
 
     UserService userService;
-
-    BookingRepository bookingRepository;
-
+    BookingService bookingService;
     ItemRepository itemRepository;
-
     CommentRepository commentRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<ItemDto> getAllItems() {
         return itemRepository.findAll()
                 .stream()
@@ -63,6 +61,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<DtoTime> getItemsByUser(Long userId) {
         User owner = UserMapper.toUser(userService.findUserById(userId));
         List<Item> items = itemRepository.findByOwner(owner);
@@ -70,7 +69,7 @@ public class ItemServiceImpl implements ItemService {
         return items.stream()
                 .map(ItemMapper::toItemDtoWithDate)
                 .peek(itemDto -> {
-                    List<Booking> bookings = bookingRepository.findBookingByItemIdOrderByStartAsc(itemDto.getId());
+                    List<Booking> bookings = bookingService.findBookingByItemIdOrderByStartAsc(itemDto.getId());
                     LocalDateTime now = LocalDateTime.now();
                     BookingRequestDto lastBooking = null;
                     BookingRequestDto nextBooking = null;
@@ -114,16 +113,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public DtoTime findItemById(Long userId, Long itemId) {
         userService.findUserById(userId);
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Item not found."));
 
         LocalDateTime now = LocalDateTime.now();
-        BookingRequestDto lastBooking = bookingRepository.findTopByItemOwnerIdAndStatusAndStartBeforeOrderByEndDesc(userId, Status.APPROVED, now)
+        BookingRequestDto lastBooking = bookingService.findTopByItemOwnerIdAndStatusAndStartBeforeOrderByEndDesc(userId, Status.APPROVED, now)
                 .map(BookingMapper::toBookingRequestDto)
                 .orElse(null);
 
-        BookingRequestDto nextBooking = bookingRepository.findTopByItemOwnerIdAndStatusAndStartAfterOrderByStartAsc(userId, Status.APPROVED, now)
+        BookingRequestDto nextBooking = bookingService.findTopByItemOwnerIdAndStatusAndStartAfterOrderByStartAsc(userId, Status.APPROVED, now)
                 .map(BookingMapper::toBookingRequestDto)
                 .orElse(null);
 
@@ -171,7 +171,7 @@ public class ItemServiceImpl implements ItemService {
         if (existingComment != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You already commented this item.");
         }
-        List<Booking> bookings = bookingRepository.findBookingByItemIdAndBookerIdAndStatusAndEndBefore(itemId, userId, Status.APPROVED, LocalDateTime.now());
+        List<Booking> bookings = bookingService.findBookingByItemIdAndBookerIdAndStatusAndEndBefore(itemId, userId, Status.APPROVED, LocalDateTime.now());
 
         if (bookings.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can't comment.");
