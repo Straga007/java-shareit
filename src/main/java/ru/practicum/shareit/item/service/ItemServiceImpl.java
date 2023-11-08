@@ -12,7 +12,7 @@ import ru.practicum.shareit.booking.repositry.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
-import ru.practicum.shareit.exeptions.NotFoundItemException;
+import ru.practicum.shareit.exeptions.NotFoundException;
 import ru.practicum.shareit.item.CommentRepository;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.dto.CommentDto;
@@ -93,9 +93,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto updateItem(Long userId, Long itemId, ItemDto itemDto) {
         User owner = UserMapper.toUser(userService.findUserById(userId));
-        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundItemException("Item not found."));
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Item not found."));
         if (!item.getOwner().equals(owner)) {
-            throw new NotFoundItemException("Item not found.");
+            throw new NotFoundException("Item not found.");
         }
         String name = itemDto.getName();
         String description = itemDto.getDescription();
@@ -116,7 +116,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public DtoTime findItemById(Long userId, Long itemId) {
         userService.findUserById(userId);
-        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundItemException("Item not found."));
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Item not found."));
 
         LocalDateTime now = LocalDateTime.now();
         BookingRequestDto lastBooking = bookingRepository.findTopByItemOwnerIdAndStatusAndStartBeforeOrderByEndDesc(userId, Status.APPROVED, now)
@@ -160,7 +160,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item findItem(Long itemId) {
-        return itemRepository.findById(itemId).orElseThrow(() -> new NotFoundItemException("Item not found."));
+        return itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Item not found."));
     }
 
     @Override

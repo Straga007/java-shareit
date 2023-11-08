@@ -13,8 +13,7 @@ import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.repositry.BookingRepository;
-import ru.practicum.shareit.exeptions.NotFoundBookingException;
-import ru.practicum.shareit.exeptions.NotFoundItemException;
+import ru.practicum.shareit.exeptions.NotFoundException;
 import ru.practicum.shareit.exeptions.UnsupportedStateException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
@@ -152,11 +151,11 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingDto findBookingById(Long userId, Long bookingId) {
         userService.findUserById(userId);
-        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundBookingException("Booking not found."));
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundException("Booking not found."));
         if (booking.getBooker().getId().equals(userId) || booking.getItem().getOwner().getId().equals(userId)) {
             return BookingMapper.toBookingDto(booking);
         } else {
-            throw new NotFoundItemException("Item not found.");
+            throw new NotFoundException("Item not found.");
         }
     }
 
@@ -169,7 +168,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingDto bookingApprove(Long ownerId, Long bookingId, boolean approved) {
         userService.findUserById(ownerId);
-        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundBookingException("Booking not found."));
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundException("Booking not found."));
         if (!booking.getItem().getOwner().getId().equals(ownerId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "You are not owner!");
         }

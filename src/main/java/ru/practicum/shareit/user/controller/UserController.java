@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dataTransferObject.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
