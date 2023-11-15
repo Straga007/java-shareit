@@ -220,7 +220,7 @@ class ItemServiceImplTest {
 
         ItemDtoDate result = itemService.findItemById(userId, itemId);
 
-        
+
         assertNotNull(result);
         assertEquals(item.getId(), result.getId());
         verify(userService, times(1)).findUserById(userId);
@@ -262,7 +262,7 @@ class ItemServiceImplTest {
 
     @Test
     void searchItems_WithPages() {
-        
+
         Long userId = 1L;
         String text = "search";
         Integer from = 0;
@@ -277,10 +277,10 @@ class ItemServiceImplTest {
         Page<Item> page = new PageImpl<>(items);
         when(itemRepository.searchItems(text, PageRequest.of(0, 10))).thenReturn(page);
 
-        
+
         List<ItemDto> result = itemService.searchItems(userId, text, from, size);
 
-        
+
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(items.stream().map(ItemMapper::toItemDto).collect(Collectors.toList()), result);

@@ -408,10 +408,10 @@ class BookingServiceImplTest {
         when(bookingRepository.findAllByItemOwnerIdAndStatusOrderByStartDesc(userId, Status.CANCELED, PageRequest.of(0, 10)))
                 .thenReturn(page);
 
-        
+
         List<BookingDto> result = bookingService.getBookingByOwner(userId, state, 0, 10);
 
-        
+
         assertEquals(bookingDtoList, result);
         verify(bookingRepository, times(1)).findAllByItemOwnerIdAndStatusOrderByStartDesc(userId, Status.CANCELED, PageRequest.of(0, 10));
         verifyNoMoreInteractions(bookingRepository);
@@ -419,7 +419,7 @@ class BookingServiceImplTest {
 
     @Test
     void getBookingByOwner_WithPages_StateFuture() {
-        
+
         LocalDateTime now = LocalDateTime.now(clock);
         LocalDateTime start = now.minusHours(1L);
         LocalDateTime end = now.plusHours(1L);
@@ -439,10 +439,10 @@ class BookingServiceImplTest {
         when(bookingRepository.findAllByItemOwnerIdAndStartAfterOrderByStartDesc(userId, now, PageRequest.of(0, 10)))
                 .thenReturn(page);
 
-        
+
         List<BookingDto> result = bookingService.getBookingByOwner(userId, state, 0, 10);
 
-        
+
         assertEquals(bookingDtoList, result);
         verify(bookingRepository, times(1)).findAllByItemOwnerIdAndStartAfterOrderByStartDesc(userId, now, PageRequest.of(0, 10));
         verifyNoMoreInteractions(bookingRepository);
@@ -450,7 +450,7 @@ class BookingServiceImplTest {
 
     @Test
     void getBookingByOwner_WithPages_StatePast() {
-        
+
         LocalDateTime now = LocalDateTime.now(clock);
         LocalDateTime start = now.minusHours(1L);
         LocalDateTime end = now.plusHours(1L);
@@ -470,10 +470,10 @@ class BookingServiceImplTest {
         when(bookingRepository.findAllByItemOwnerIdAndEndBeforeOrderByStartDesc(userId, now, PageRequest.of(0, 10)))
                 .thenReturn(page);
 
-        
+
         List<BookingDto> result = bookingService.getBookingByOwner(userId, state, 0, 10);
 
-        
+
         assertEquals(bookingDtoList, result);
         verify(bookingRepository, times(1)).findAllByItemOwnerIdAndEndBeforeOrderByStartDesc(userId, now, PageRequest.of(0, 10));
         verifyNoMoreInteractions(bookingRepository);
@@ -481,13 +481,13 @@ class BookingServiceImplTest {
 
     @Test
     void getBookingByOwner_WithPages_StateUnsupportedState() {
-        
+
         Long userId = 1L;
         String state = "UNSUPPORTED_STATUS";
         Integer from = 0;
         Integer size = 10;
 
-        
+
         assertThrows(UnsupportedStateException.class, () -> bookingService.getBookingByOwner(userId, state, from, size));
     }
 
@@ -500,19 +500,19 @@ class BookingServiceImplTest {
 
     @Test
     void getBookingByOwner_WithoutPages_StateUnsupportedState() {
-        
+
         Long userId = 1L;
         String state = "UNSUPPORTED_STATUS";
         Integer from = null;
         Integer size = null;
 
-        
+
         assertThrows(UnsupportedStateException.class, () -> bookingService.getBookingByOwner(userId, state, from, size));
     }
 
     @Test
     void addBooking() {
-        
+
         LocalDateTime now = LocalDateTime.now(clock);
         LocalDateTime start = now.minusHours(1L);
         LocalDateTime end = now.plusHours(1L);
@@ -531,10 +531,10 @@ class BookingServiceImplTest {
         when(itemService.findItem(bookingRequestDto.getItemId())).thenReturn(item);
         when(bookingRepository.save(any(Booking.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        
+
         BookingDto result = bookingService.addBooking(bookerId, bookingRequestDto);
 
-        
+
         assertNotNull(result);
         assertEquals(1L, result.getId());
         assertEquals(bookingRequestDto.getStart(), result.getStart());
@@ -550,7 +550,7 @@ class BookingServiceImplTest {
 
     @Test
     void addBooking_ErrorResponse_ItemFalse() {
-        
+
         LocalDateTime now = LocalDateTime.now(clock);
         LocalDateTime start = now.minusHours(1L);
         LocalDateTime end = now.plusHours(1L);
@@ -575,13 +575,13 @@ class BookingServiceImplTest {
         when(itemService.findItem(anyLong())).thenReturn(item);
         when(itemService.findItem(bookingRequestDto.getItemId())).thenReturn(item);
 
-        
+
         assertThrows(ResponseStatusException.class, () -> bookingService.addBooking(bookerId, bookingRequestDto));
     }
 
     @Test
     void addBooking_ErrorResponse_Time() {
-        
+
         LocalDateTime now = LocalDateTime.now(clock);
         LocalDateTime start = now.minusHours(1L);
         LocalDateTime end = now.minusHours(1L);
@@ -599,13 +599,13 @@ class BookingServiceImplTest {
         when(itemService.findItem(anyLong())).thenReturn(item);
         when(itemService.findItem(bookingRequestDto.getItemId())).thenReturn(item);
 
-        
+
         assertThrows(ResponseStatusException.class, () -> bookingService.addBooking(bookerId, bookingRequestDto));
     }
 
     @Test
     void addBooking_ErrorResponse_OwnerIsBooker() {
-        
+
         LocalDateTime now = LocalDateTime.now(clock);
         LocalDateTime start = now.minusHours(1L);
         LocalDateTime end = now.plusHours(1L);
@@ -622,13 +622,13 @@ class BookingServiceImplTest {
         when(itemService.findItem(anyLong())).thenReturn(item);
         when(itemService.findItem(bookingRequestDto.getItemId())).thenReturn(item);
 
-        
+
         assertThrows(ResponseStatusException.class, () -> bookingService.addBooking(bookerId, bookingRequestDto));
     }
 
     @Test
     void addBooking_ErrorResponse_TimeIsNull() {
-        
+
         Long bookerId = 1L;
         Long itemId = 1L;
         String status = "WAITING";
@@ -642,7 +642,7 @@ class BookingServiceImplTest {
         when(itemService.findItem(anyLong())).thenReturn(item);
         when(itemService.findItem(bookingRequestDto.getItemId())).thenReturn(item);
 
-        
+
         assertThrows(ResponseStatusException.class, () -> bookingService.addBooking(bookerId, bookingRequestDto));
     }
 

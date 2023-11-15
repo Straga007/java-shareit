@@ -20,7 +20,7 @@ class ErrorHandlerTest {
     }
 
     @Test
-    public void handleUnsupportedStateException_ReturnsInternalServerError() {
+    public void handleUnsupportedStateException() {
         UnsupportedStateException ex = new UnsupportedStateException("Unsupported state");
         ResponseEntity<ErrorResponse> responseEntity = errorHandler.handleUnsupportedStateException(ex);
 
@@ -38,7 +38,7 @@ class ErrorHandlerTest {
     }
 
     @Test
-    public void createErrorResponse_WithErrorMessage() {
+    public void createErrorResponse() {
         ErrorResponse errorResponse = new ErrorResponse("Error message");
 
         Assertions.assertEquals("Error message", errorResponse.getError());
@@ -62,7 +62,7 @@ class ErrorHandlerTest {
     }
 
     @Test
-    public void NotFoundException_HasResponseStatusNotFound() {
+    public void notFoundException_HasResponseStatusNotFound() {
         NotFoundException ex = new NotFoundException("Item not found");
         ResponseEntity<ErrorResponse> responseEntity = errorHandler.handleNotFoundException(ex);
 
