@@ -21,26 +21,25 @@ public class ItemController {
     private final ItemService itemService;
     private static final String header = "X-Sharer-User-Id";
 
-    @GetMapping("/allItems")
-    public List<ItemDto> getAllItems() {
-        return itemService.getAllItems();
-    }
-
     @GetMapping
-    public List<ItemDtoDate> getItemsByUser(@RequestHeader(header) Long userId) {
-        return itemService.getItemsByUser(userId);
+    public List<ItemDtoDate> getItemsByUser(@RequestHeader(header) Long userId,
+                                                @RequestParam(value = "from", required = false) Integer from,
+                                                @RequestParam(value = "size", required = false) Integer size) {
+        return itemService.getItemsByUser(userId, from, size);
     }
 
     @GetMapping("/{itemId}")
     public ItemDtoDate findItemById(@RequestHeader(header) Long userId,
-                                    @PathVariable("itemId") Long itemId) {
+                                        @PathVariable("itemId") Long itemId) {
         return itemService.findItemById(userId, itemId);
     }
 
     @GetMapping("/search")
     public List<ItemDto> searchItems(@RequestHeader(header) Long userId,
-                                     @RequestParam String text) {
-        return itemService.searchItems(userId, text);
+                                     @RequestParam String text,
+                                     @RequestParam(value = "from", required = false) Integer from,
+                                     @RequestParam(value = "size", required = false) Integer size) {
+        return itemService.searchItems(userId, text, from, size);
     }
 
     @PostMapping
@@ -61,11 +60,6 @@ public class ItemController {
                                  @PathVariable("itemId") Long itemId,
                                  @Valid @RequestBody CommentDto commentDto) {
         return itemService.addComment(userId, itemId, commentDto);
-    }
-
-    @GetMapping("/comments")
-    public List<CommentDto> getAllComments() {
-        return itemService.getAllComments();
     }
 }
 
