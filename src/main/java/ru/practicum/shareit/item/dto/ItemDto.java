@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.user.dataTransferObject.UserDto;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -25,7 +25,7 @@ public class ItemDto {
     @NotEmpty(message = "Item description can't be Empty")
     String description;
 
-    @NotNull(message = "Item availability can't be Null")
+    @NotBlank(message = "Item availability can't be Null")
     Boolean available;
 
     UserDto owner;

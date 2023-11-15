@@ -5,10 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
+import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.user.dataTransferObject.UserDto;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -23,12 +24,12 @@ public class ItemDtoDate {
     @NotEmpty(message = "Item description can't be Empty")
     String description;
 
-    @NotNull(message = "Item availability can't be Null")
+    @NotBlank(message = "Item availability can't be Null")
     Boolean available;
 
     UserDto owner;
 
-    Long requestId;
+    ItemRequestDto request;
 
     BookingRequestDto lastBooking;
 
