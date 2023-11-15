@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.user.object.User;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**

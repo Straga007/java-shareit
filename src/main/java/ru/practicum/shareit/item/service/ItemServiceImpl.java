@@ -171,12 +171,12 @@ public class ItemServiceImpl implements ItemService {
                 .map(CommentMapper::toCommentDto)
                 .collect(Collectors.toList());
 
-        ItemDtoDate ItemDtoDate = ItemMapper.toItemDtoDate(item);
-        ItemDtoDate.setLastBooking(lastBooking);
-        ItemDtoDate.setNextBooking(nextBooking);
-        ItemDtoDate.setComments(comments);
+        ItemDtoDate itemDtoDate = ItemMapper.toItemDtoDate(item);
+        itemDtoDate.setLastBooking(lastBooking);
+        itemDtoDate.setNextBooking(nextBooking);
+        itemDtoDate.setComments(comments);
 
-        return ItemDtoDate;
+        return itemDtoDate;
     }
 
     @Override
