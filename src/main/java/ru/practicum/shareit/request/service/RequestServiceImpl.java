@@ -37,6 +37,11 @@ public class RequestServiceImpl implements RequestService {
     RequestRepository requestRepository;
 
     ItemRepository itemRepository;
+    @Override
+    public ItemRequest findItemRequestById(Long requestId) {
+        return requestRepository.findById(requestId)
+                .orElseThrow(() -> new NotFoundException(String.format("Request %s not found.", requestId)));
+    }
 
     @Override
     public ItemRequestDto addRequest(Long userId, ItemRequestDto requestDto) {

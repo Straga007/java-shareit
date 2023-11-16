@@ -29,7 +29,6 @@ import ru.practicum.shareit.item.service.ItemServiceImpl;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.mapper.RequestMapper;
 import ru.practicum.shareit.request.object.ItemRequest;
-import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.request.service.RequestService;
 import ru.practicum.shareit.user.dataTransferObject.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
@@ -67,8 +66,6 @@ class ItemServiceImplTest {
     @Mock
     RequestService requestService;
 
-    @Mock
-    RequestRepository requestRepository;
 
     @InjectMocks
     ItemServiceImpl itemService;
@@ -76,7 +73,7 @@ class ItemServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        itemService = new ItemServiceImpl(userService, bookingRepository, itemRepository, commentRepository, requestService, requestRepository);
+        itemService = new ItemServiceImpl(userService, bookingRepository, itemRepository, commentRepository, requestService);
     }
 
     @Test
@@ -96,7 +93,7 @@ class ItemServiceImplTest {
 
         when(requestService.findItemRequestById(userId, requestId)).thenReturn(itemRequestDto);
 
-        when(requestRepository.findById(requestId)).thenReturn(Optional.of(itemRequest));
+        when(requestService.findItemRequestById(requestId)).thenReturn(itemRequest);
 
         when(itemRepository.save(any(Item.class))).thenReturn(item);
 

@@ -26,7 +26,6 @@ import ru.practicum.shareit.item.object.Comment;
 import ru.practicum.shareit.item.object.Item;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.object.ItemRequest;
-import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.request.service.RequestService;
 import ru.practicum.shareit.user.dataTransferObject.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
@@ -54,7 +53,6 @@ public class ItemServiceImpl implements ItemService {
 
     RequestService requestService;
 
-    RequestRepository requestRepository;
 
     @Override
     public ItemDto addItem(Long userId, ItemDto itemDto) {
@@ -64,8 +62,7 @@ public class ItemServiceImpl implements ItemService {
         if (itemDto.getRequestId() != null) {
             ItemRequestDto requestDto = requestService.findItemRequestById(userId, itemDto.getRequestId());
             itemDto.setRequestId(requestDto.getId());
-            request = requestRepository.findById(itemDto.getRequestId())
-                    .orElseThrow(() -> new NotFoundException(String.format("Request %s not found.", itemDto.getRequestId())));
+            request = requestService.findItemRequestById(itemDto.getRequestId());
         }
         Item item = ItemMapper.toItem(itemDto);
         item.setRequest(request);
