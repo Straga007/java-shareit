@@ -42,7 +42,7 @@ class ErrorHandlerTest {
     UserService userService;
 
     @Test
-    void UserCreateFailNoEmail() throws Exception {
+    void userCreateFailNoEmail() throws Exception {
         UserDto userDto = new UserDto();
         userDto.setName("user");
 
