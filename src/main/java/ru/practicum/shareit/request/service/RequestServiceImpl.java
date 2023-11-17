@@ -38,6 +38,7 @@ public class RequestServiceImpl implements RequestService {
     RequestRepository requestRepository;
 
     ItemRepository itemRepository;
+    //ItemService itemService;
 
     @Override
     public ItemRequest findItemRequestById(Long requestId) {
