@@ -50,7 +50,6 @@ public class ItemServiceImpl implements ItemService {
     ItemRepository itemRepository;
 
     CommentRepository commentRepository;
-
     RequestService requestService;
 
 
@@ -69,7 +68,13 @@ public class ItemServiceImpl implements ItemService {
         itemRepository.save(item);
         return ItemMapper.toItemDto(item);
     }
-
+    @Override
+    public List<ItemDto> getItemsByRequestId(Long requestId) {
+        List<Item> items = itemRepository.findAllByRequestId(requestId);
+        return items.stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
+    }
     @Override
     public List<ItemDtoDate> getItemsByUser(Long userId, Integer from, Integer size) {
         User owner = UserMapper.toUser(userService.findUserById(userId));

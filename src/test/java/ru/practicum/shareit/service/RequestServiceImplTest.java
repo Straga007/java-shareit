@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.server.ResponseStatusException;
+import ru.practicum.shareit.exeptions.BadRequestException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.object.Item;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
@@ -85,8 +86,9 @@ class RequestServiceImplTest {
         requester.setId(userId);
         ItemRequestDto itemRequestDto = new ItemRequestDto(itemRequestId, null, requester, now, new ArrayList<>());
 
-        assertThrows(ResponseStatusException.class, () -> requestService.addRequest(userId, itemRequestDto));
+        assertThrows(BadRequestException.class, () -> requestService.addRequest(userId, itemRequestDto));
     }
+
 
     @Test
     void getAllOwnRequests() {

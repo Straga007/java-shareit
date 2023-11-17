@@ -8,6 +8,7 @@ import ru.practicum.shareit.item.object.Item;
 import java.util.List;
 
 public interface ItemService {
+    List<ItemDto> getItemsByRequestId(Long requestId);
 
     ItemDto addItem(Long userId, ItemDto itemDto);
 

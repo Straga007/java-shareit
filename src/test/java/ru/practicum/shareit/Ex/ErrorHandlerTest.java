@@ -1,30 +1,35 @@
 package ru.practicum.shareit.Ex;
 
-
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import ru.practicum.shareit.exeptions.ErrorHandler;
-import ru.practicum.shareit.exeptions.ErrorResponse;
-import ru.practicum.shareit.exeptions.NotFoundException;
-import ru.practicum.shareit.exeptions.UnsupportedStateException;
+import ru.practicum.shareit.exeptions.*;
 
+import static org.mockito.Mockito.when;
+
+
+@ExtendWith(MockitoExtension.class)
 class ErrorHandlerTest {
+    @Mock
+    private UnsupportedStateException ex;
+
+    @InjectMocks
     private ErrorHandler errorHandler;
 
-    @BeforeEach
-    public void setUp() {
-        errorHandler = new ErrorHandler();
-    }
 
     @Test
     public void handleUnsupportedStateException() {
-        UnsupportedStateException ex = new UnsupportedStateException("Unsupported state");
+        when(ex.getMessage()).thenReturn("Unsupported state");
+
         ResponseEntity<ErrorResponse> responseEntity = errorHandler.handleUnsupportedStateException(ex);
 
         Assertions.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        Assertions.assertEquals("Unsupported state", responseEntity.getBody().getError());
     }
 
     @Test
@@ -67,6 +72,14 @@ class ErrorHandlerTest {
         ResponseEntity<ErrorResponse> responseEntity = errorHandler.handleNotFoundException(ex);
 
         Assertions.assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void createBadRequestException_WithMessage() {
+        String message = "Wrong description.";
+        BadRequestException exception = new BadRequestException(message);
+
+        Assertions.assertEquals(message, exception.getMessage());
     }
 
     @Test

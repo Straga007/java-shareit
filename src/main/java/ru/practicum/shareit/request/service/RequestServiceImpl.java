@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import ru.practicum.shareit.exeptions.BadRequestException;
 import ru.practicum.shareit.exeptions.NotFoundException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -37,6 +38,7 @@ public class RequestServiceImpl implements RequestService {
     RequestRepository requestRepository;
 
     ItemRepository itemRepository;
+
     @Override
     public ItemRequest findItemRequestById(Long requestId) {
         return requestRepository.findById(requestId)
@@ -47,7 +49,7 @@ public class RequestServiceImpl implements RequestService {
     public ItemRequestDto addRequest(Long userId, ItemRequestDto requestDto) {
         LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
         if (requestDto.getDescription() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong description.");
+            throw new BadRequestException("Wrong description.");
         }
         UserDto requesterDto = userService.findUserById(userId);
         requestDto.setRequester(requesterDto);
