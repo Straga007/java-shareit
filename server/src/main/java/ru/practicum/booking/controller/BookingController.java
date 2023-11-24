@@ -2,10 +2,9 @@ package ru.practicum.booking.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.booking.dto.BookingDto;
 import ru.practicum.booking.dto.BookingRequestDto;
+import ru.practicum.booking.dto.BookingDto;
 import ru.practicum.booking.service.BookingService;
-
 
 import javax.validation.Valid;
 import java.util.List;

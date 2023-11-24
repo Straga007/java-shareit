@@ -7,7 +7,7 @@ services:
     image: server-image
     container_name: server-container
     ports:
-      - "9090:9090"
+      - "8080:8080"
     depends_on:
       - db
     environment:

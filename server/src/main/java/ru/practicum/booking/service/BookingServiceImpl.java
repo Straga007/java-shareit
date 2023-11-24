@@ -24,7 +24,6 @@ import ru.practicum.user.mapper.UserMapper;
 import ru.practicum.user.object.User;
 import ru.practicum.user.service.UserService;
 
-
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
