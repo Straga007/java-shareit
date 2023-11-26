@@ -1,3 +1,4 @@
+
 package shareit;
 
 import org.junit.jupiter.api.Test;
@@ -15,4 +16,3 @@ class ShareItTests {
 	}
 
 }
-
