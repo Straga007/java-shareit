@@ -1,4 +1,3 @@
-/*
 package shareit.Cont;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,12 +10,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.booking.controller.BookingController;
-import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.BookingRequestDto;
-import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.user.dataTransferObject.UserDto;
+import ru.practicum.booking.controller.BookingController;
+import ru.practicum.booking.dto.BookingDto;
+import ru.practicum.booking.dto.BookingRequestDto;
+import ru.practicum.booking.service.BookingService;
+import ru.practicum.item.dto.ItemDto;
+import ru.practicum.user.dataTransferObject.UserDto;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(BookingController.class)
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BookingControllerTest {
+class BookingControllerTest {
 
     static final String header = "X-Sharer-User-Id";
 
@@ -160,4 +159,3 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$.status").value("ACCEPTED"));
     }
 }
-*/
