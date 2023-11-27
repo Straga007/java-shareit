@@ -1,12 +1,18 @@
 package ru.practicum.shareit;
 
-import org.springframework.boot.test.context.SpringBootTest;
 import org.junit.jupiter.api.Test;
 
-@SpringBootTest(classes = ShareItGateway.class)
-class ShareItGatewayTest {
+import static org.junit.Assert.*;
+
+public class ShareItGatewayTest {
 
     @Test
-    void contextLoads() {
+    public void testMainMethod() {
+        try {
+            ShareItGateway.main(new String[]{});
+        } catch (Exception e) {
+            fail("Exception thrown during execution: " + e.getMessage());
+        }
+
     }
 }
