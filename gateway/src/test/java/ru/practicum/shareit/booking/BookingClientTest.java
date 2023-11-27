@@ -56,6 +56,7 @@ public class BookingClientTest {
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertEquals("{id=1, start=" + start + ", end=" + end + ", bookerId=1, itemId=null, status=WAITING}", responseEntity.getBody().toString());
     }
+
     @Test
     public void testGetAllBookingsWithState() {
         Long userId = 1L;
@@ -80,6 +81,7 @@ public class BookingClientTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("[{id=1, start=2023-01-01T12:00, end=2023-01-01T14:00, bookerId=1, itemId=null, status=WAITING}]", responseEntity.getBody().toString());
     }
+
     @Test
     public void testGetAllBookingByOwner() {
         Long userId = 1L;

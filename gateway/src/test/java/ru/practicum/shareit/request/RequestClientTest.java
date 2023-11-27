@@ -50,6 +50,7 @@ public class RequestClientTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("[{id=1, description=Test Request, requester={id=1, name=John}, created=2023-01-01T12:00:00, items=[]}]", responseEntity.getBody().toString());
     }
+
     @Test
     public void testGetAllOthersRequests() {
         Long userId = 1L;

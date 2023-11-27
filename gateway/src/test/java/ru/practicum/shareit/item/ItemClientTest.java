@@ -100,6 +100,7 @@ public class ItemClientTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("[{id=1, name=Fork, description=Thing for eat, available=true, owner={id=1, name=Ivan, email=ivan@bik.com}, requestId=null, comments=null}]", responseEntity.getBody().toString());
     }
+
     @Test
     public void testFindItemById() {
         Long userId = 1L;
@@ -156,6 +157,7 @@ public class ItemClientTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("[{id=1, name=Fork, description=Thing for eat, available=true, owner={id=1, name=Ivan, email=ivan@bik.com}, requestId=null, comments=null}]", responseEntity.getBody().toString());
     }
+
     @Test
     public void testUpdateItem() {
         Long userId = 1L;
@@ -180,6 +182,7 @@ public class ItemClientTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("{id=1, name=Updated Fork, description=Updated Thing for eat, available=true, owner=null, requestId=null, comments=null}", responseEntity.getBody().toString());
     }
+
     @Test
     public void testAddComment() {
         Long userId = 1L;
