@@ -1,4 +1,4 @@
-package ru.practicum.shareit;
+package ru.practicum.shareit.user;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -7,8 +7,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import ru.practicum.shareit.user.UserClient;
-import ru.practicum.shareit.user.UserController;
 import ru.practicum.shareit.user.dto.UserDto;
 
 

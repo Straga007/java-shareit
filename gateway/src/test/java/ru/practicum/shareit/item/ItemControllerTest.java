@@ -1,4 +1,4 @@
-package ru.practicum.shareit;
+package ru.practicum.shareit.item;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -7,8 +7,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import ru.practicum.shareit.item.ItemClient;
-import ru.practicum.shareit.item.ItemController;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 
@@ -36,22 +34,18 @@ public class ItemControllerTest {
         Integer from = 0;
         Integer size = 10;
 
-        // Создаем мок-ответ от клиента
         ResponseEntity<Object> mockResponse = new ResponseEntity<>("Mocked response", HttpStatus.OK);
 
-        // Устанавливаем поведение мока при вызове метода getItemsByUser
         when(itemClient.getItemsByUser(userId, from, size)).thenReturn(mockResponse);
 
-        // Вызываем метод контроллера
         ResponseEntity<Object> responseEntity = itemController.getItemsByUser(userId, from, size);
 
-        // Проверяем, что ответ контроллера соответствует мок-ответу
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("Mocked response", responseEntity.getBody());
 
-        // Проверяем, что метод getItemsByUser был вызван один раз с заданными параметрами
         verify(itemClient, times(1)).getItemsByUser(userId, from, size);
     }
+
     @Test
     public void testFindItemById() {
         Long userId = 1L;

@@ -1,4 +1,4 @@
-package ru.practicum.shareit;
+package ru.practicum.shareit.item;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.junit.Before;
@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import ru.practicum.shareit.item.ItemClient;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -96,10 +95,8 @@ public class ItemClientTest {
                                 "\"comments\": null" +
                                 "}]")));
 
-        // Вызов метода getItemsByUser
         ResponseEntity<Object> responseEntity = itemClient.getItemsByUser(userId, 0, 10);
 
-        // Проверка, что запрос был отправлен
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("[{id=1, name=Fork, description=Thing for eat, available=true, owner={id=1, name=Ivan, email=ivan@bik.com}, requestId=null, comments=null}]", responseEntity.getBody().toString());
     }

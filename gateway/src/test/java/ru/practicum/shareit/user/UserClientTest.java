@@ -1,4 +1,4 @@
-package ru.practicum.shareit;
+package ru.practicum.shareit.user;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.junit.Before;
@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import ru.practicum.shareit.user.UserClient;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -45,7 +44,6 @@ public class UserClientTest {
                                 "}]")));
 
         ResponseEntity<Object> responseEntity = userClient.getUsers();
-        // Expected
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("[{id=1, name=John, email=john@example.com}, {id=2, name=Jane, email=jane@example.com}]", responseEntity.getBody().toString());
     }
