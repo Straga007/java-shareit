@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -32,16 +33,22 @@ import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.object.User;
 import ru.practicum.shareit.user.service.UserService;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ItemServiceImpl implements ItemService {
+    @Autowired
+    Clock clock;
 
     UserService userService;
 
@@ -81,41 +88,14 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDtoDate> getItemsByUser(Long userId, Integer from, Integer size) {
         User owner = UserMapper.toUser(userService.findUserById(userId));
 
-        if (from != null && size != null) {
-            if (from < 0 || size <= 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong request.");
-            }
-            int pageNumber = (int) Math.ceil((double) from / size);
-            Pageable pageable = PageRequest.of(pageNumber, size);
+        int pageNumber = (int) Math.ceil((double) from / size);
+        Pageable pageable = PageRequest.of(pageNumber, size);
 
-            return itemRepository.findByOwner(owner, pageable).stream()
-                    .map(ItemMapper::toItemDtoDate)
-                    .peek(itemDto -> {
-                        List<Booking> bookings = bookingRepository.findBookingByItemIdOrderByStartAsc(itemDto.getId());
-                        LocalDateTime now = LocalDateTime.now();
-                        BookingRequestDto lastBooking = null;
-                        BookingRequestDto nextBooking = null;
-
-                        for (Booking booking : bookings) {
-                            if (booking.getEnd().isBefore(now)) {
-                                lastBooking = BookingMapper.toBookingRequestDto(booking);
-                            } else if (booking.getStart().isAfter(now)) {
-                                nextBooking = BookingMapper.toBookingRequestDto(booking);
-                                break;
-                            }
-                        }
-
-                        itemDto.setLastBooking(lastBooking);
-                        itemDto.setNextBooking(nextBooking);
-                    })
-                    .collect(Collectors.toList());
-        }
-
-        return itemRepository.findByOwner(owner).stream()
+        return itemRepository.findByOwner(owner, pageable).stream()
                 .map(ItemMapper::toItemDtoDate)
                 .peek(itemDto -> {
                     List<Booking> bookings = bookingRepository.findBookingByItemIdOrderByStartAsc(itemDto.getId());
-                    LocalDateTime now = LocalDateTime.now();
+                    LocalDateTime now = LocalDateTime.now(clock.withZone(ZoneId.systemDefault()));
                     BookingRequestDto lastBooking = null;
                     BookingRequestDto nextBooking = null;
 
@@ -131,6 +111,7 @@ public class ItemServiceImpl implements ItemService {
                     itemDto.setLastBooking(lastBooking);
                     itemDto.setNextBooking(nextBooking);
                 })
+                .sorted(Comparator.comparing(ItemDtoDate::getId))
                 .collect(Collectors.toList());
     }
 
