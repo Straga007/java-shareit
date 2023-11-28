@@ -30,6 +30,7 @@ import ru.practicum.shareit.item.service.ItemServiceImpl;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.mapper.RequestMapper;
 import ru.practicum.shareit.request.object.ItemRequest;
+import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.request.service.RequestService;
 import ru.practicum.shareit.user.dataTransferObject.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
@@ -38,6 +39,7 @@ import ru.practicum.shareit.user.service.UserService;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +53,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class ItemServiceImplTest {
+    @Mock
+    Clock clock;
 
     @Mock
     UserService userService;
@@ -66,7 +70,8 @@ class ItemServiceImplTest {
 
     @Mock
     RequestService requestService;
-
+    @Mock
+    RequestRepository requestRepository;
 
     @InjectMocks
     ItemServiceImpl itemService;
@@ -74,8 +79,10 @@ class ItemServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        itemService = new ItemServiceImpl(userService, bookingRepository, itemRepository, commentRepository, requestService);
+        clock = Clock.fixed(LocalDateTime.parse("2023-06-01T12:00:00").atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
+        itemService = new ItemServiceImpl(clock, userService, bookingRepository, itemRepository, commentRepository, requestService, requestRepository);
     }
+
 
     @Test
     void addItem_withRequests() {
@@ -135,7 +142,7 @@ class ItemServiceImplTest {
         UserDto ownerDto = UserMapper.toUserDto(owner);
         when(userService.findUserById(userId)).thenReturn(ownerDto);
 
-        assertThrows(ResponseStatusException.class, () -> itemService.getItemsByUser(userId, from, size));
+        assertThrows(IllegalArgumentException.class, () -> itemService.getItemsByUser(userId, from, size));
     }
 
     @Test
@@ -163,22 +170,6 @@ class ItemServiceImplTest {
         verify(itemRepository, times(1)).findByOwner(owner, PageRequest.of(0, 10));
     }
 
-    @Test
-    void getItemsByUser_WithoutPages() {
-        Long userId = 1L;
-        User owner = new User();
-        UserDto ownerDto = new UserDto();
-        when(userService.findUserById(userId)).thenReturn(ownerDto);
-        List<Item> items = new ArrayList<>();
-        items.add(new Item(1L, "Fork", "Kitchen thing", true, owner, null));
-        when(itemRepository.findByOwner(owner)).thenReturn(items);
-
-        List<ItemDtoDate> result = itemService.getItemsByUser(userId, null, null);
-
-        assertEquals(items.size(), result.size());
-        assertEquals(items.stream().map(ItemMapper::toItemDtoDate).collect(Collectors.toList()), result);
-        verify(itemRepository, times(1)).findByOwner(owner);
-    }
 
     @Test
     void updateItem() {
