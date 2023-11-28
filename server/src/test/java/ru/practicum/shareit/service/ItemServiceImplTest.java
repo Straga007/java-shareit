@@ -30,7 +30,6 @@ import ru.practicum.shareit.item.service.ItemServiceImpl;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.mapper.RequestMapper;
 import ru.practicum.shareit.request.object.ItemRequest;
-import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.request.service.RequestService;
 import ru.practicum.shareit.user.dataTransferObject.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
@@ -70,8 +69,6 @@ class ItemServiceImplTest {
 
     @Mock
     RequestService requestService;
-    @Mock
-    RequestRepository requestRepository;
 
     @InjectMocks
     ItemServiceImpl itemService;
@@ -80,7 +77,7 @@ class ItemServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         clock = Clock.fixed(LocalDateTime.parse("2023-06-01T12:00:00").atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
-        itemService = new ItemServiceImpl(clock, userService, bookingRepository, itemRepository, commentRepository, requestService, requestRepository);
+        itemService = new ItemServiceImpl(clock, userService, bookingRepository, itemRepository, commentRepository, requestService);
     }
 
 

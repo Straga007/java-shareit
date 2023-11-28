@@ -27,7 +27,6 @@ import ru.practicum.shareit.item.CommentRepository;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.object.ItemRequest;
-import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.request.service.RequestService;
 import ru.practicum.shareit.user.dataTransferObject.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
@@ -61,7 +60,6 @@ public class ItemServiceImpl implements ItemService {
 
     RequestService requestService;
 
-    RequestRepository requestRepository;
 
     @Override
     public ItemDto addItem(Long userId, ItemDto itemDto) {
