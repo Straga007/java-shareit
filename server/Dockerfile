@@ -1,3 +1,3 @@
-FROM openjdk:19-jdk-alpine
+FROM openjdk:11-jdk-alpine
 COPY target/*.jar server.jar
 ENTRYPOINT ["java","-jar","/server.jar"]
