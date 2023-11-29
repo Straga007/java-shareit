@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.dataTransferObject.UserDto;
 
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import java.util.List;
 public class ItemRequestDto {
     Long id;
 
+    @Size(max = 1000, message = "Text cannot exceed 1000 characters.")
     String description;
 
     UserDto requester;
